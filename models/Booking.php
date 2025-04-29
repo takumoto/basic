@@ -20,7 +20,7 @@ class Booking extends ActiveRecord
             [['start_time', 'end_time'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             ['end_time', 'compare', 'compareAttribute' => 'start_time', 'operator' => '>'],
             ['room_id', 'exist', 'targetClass' => Room::class, 'targetAttribute' => 'id'],
-            // ['room_id', 'checkAvailability'],
+            ['room_id', 'checkAvailability'],
         ];
     }
 
@@ -28,7 +28,7 @@ class Booking extends ActiveRecord
     {
         return $this->hasOne(Room::class, ['id' => 'room_id']);
     }
-   /* public function checkAvailability($attribute, $params)
+    public function checkAvailability($attribute, $params)
     {
         $exists = self::find()
             ->where(['room_id' => $this->room_id])
@@ -39,14 +39,25 @@ class Booking extends ActiveRecord
             ->exists();
 
         if ($exists) {
-            $this->addError($attribute, 'This room is already booked for the selected time period.');
+            $this->addError($attribute, 'already taken');
         }
-    }*/
-/*
-    public function getRoom()
-    {
-        return $this->hasOne(Room::class, ['id' => 'room_id']);
     }
-    */
 
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'room_id' => 'Комната',
+            'user_name' => 'Имя',
+            'start_time' => 'Начало брони',
+            'end_time' => 'Окончание брони'
+        ];
+    }
+
+    public static function getBookingsById($roomId)
+    {
+        return self::find()
+            ->where(['room_id' => $roomId])
+            ->all();
+    }
 }

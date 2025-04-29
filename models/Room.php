@@ -16,12 +16,12 @@ class Room extends ActiveRecord
     {
         return $this->hasMany(Booking::class, ['room_id' => 'id']);
     }
-    /*public function rules()
+    public function rules()
     {
         return [
             [['room_name', 'capacity'], 'required'],
             ['room_name', 'string', 'max' => 50],
             ['capacity', 'integer']
         ];
-    }*/
+    }
 }

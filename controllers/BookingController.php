@@ -20,7 +20,7 @@ class BookingController extends Controller
             'totalCount' => $query->count()
         ]);
 
-        $bookings = $query // ->joinWith('room')
+        $bookings = $query
             ->orderBy('room_id')
             ->offset($pagination->offset)
             ->limit($pagination->limit)
@@ -30,26 +30,6 @@ class BookingController extends Controller
             'bookings' => $bookings,
             'pagination' => $pagination
         ]);
-    }
-
-    public function actionCreate($room_id) {
-        if (Yii::$app->user->isGuest) {
-            Yii::$app->session->setFlash('error', 'Нет доступа');
-        } else {
-            $newId = $query = Booking::find()->count() + 1;
-            $newBooking = new Booking();
-            $newBooking->id = $newId;
-            $newBooking->room_id = $room_id; 
-            $newBooking->user_name = Yii::$app->user->identity->username;
-            $startTime = new \DateTime('2025-05-11 11:00');
-            $newBooking->start_time = $startTime->format('Y-m-d H:i:s');
-            $endTime = ($startTime->add(new \DateInterval('PT1H')))->format('Y-m-d H:i:s'); // TODO: combine time to add
-            $newBooking->end_time = $endTime;
-            $newBooking->save();
-            
-            Yii::$app->session->setFlash('success', 'Запись добавлена');
-            return $this->actionIndex();
-        }
     }
 
     public function actionDelete($room_id) {
@@ -72,7 +52,6 @@ class BookingController extends Controller
         } else {
             Yii::$app->session->setFlash('error', 'Нет доступа к этой записи');
         }
-
         return $this->actionIndex();
     }
 
