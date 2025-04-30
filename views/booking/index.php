@@ -1,29 +1,24 @@
 <?php
-use yii\helpers\Html;
-use yii\widgets\LinkPager;
 
-$this->title = "Забронированые комнаты";
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\ListView;
+use yii\grid\GridView;
+use yii\data\ArrayDataProvider;
+
+$this->title = 'Доступные комнаты';
 ?>
 
-<h1><?= $this->title ?></h1>
+<div class="booking-index">
 
-<ul>
-<?php foreach ($bookings as $booking): ?>
-    <li>
-        # <?= Html::encode("{$booking->room_id} ({$booking->user_name})") ?>:
-        cap <?= $booking->room->capacity ?>
-        name <?= $booking->room->room_name ?>
-        time <?= $booking->start_time ?>
-        <?= $booking->end_time ?>
-        <?php if (Yii::$app->user->identity->username == "admin"): // TODO proper users and roles ?>
-            <a class="btn btn-outline-secondary" 
-                href="<?= \yii\helpers\Url::to(['booking/delete', 'room_id' => $booking->room_id]) ?>"
-            >
-                Удалить запись
-            </a>
-        <?php endif ?>
-    </li>
-<?php endforeach; ?>
-</ul>
+    <h1><?= Html::encode($this->title) ?></h1>
 
-<?= LinkPager::widget(['pagination' => $pagination]) ?>
+    <?= ListView::widget([
+    'dataProvider' => new ArrayDataProvider(['allModels' => $rooms]),
+    'itemView' => function ($model) {
+        $createUrl = Yii::$app->user->isGuest ? "" : Url::to(['booking/create', 'room_id' => $model->id]);
+        return "<a class=\"btn btn-outline-primary w-50\" href={$createUrl}>".
+        "комната № {$model->room_number} - {$model->room_name} (вместимость: {$model->capacity})</a>";
+    },
+    ]); ?>
+</div>

@@ -39,11 +39,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-           // ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Room list', 'url' => ['/room/index']],
+            ['label' => 'Room booking', 'url' => ['/booking/index']],
             Yii::$app->user->isGuest
                 ? ['label' => '', 'url' => ['/site/index']] // TODO: how to do properly
-                : ['label' => 'Booking', 'url' => ['/booking/index']],
+                : ['label' => 'Manage bookings', 'url' => ['/booking/manage']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
